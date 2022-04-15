@@ -4,6 +4,7 @@ import * as ZapparThree from "@zappar/zappar-threejs-for-aframe";
 export default AFRAME.registerComponent("zappar-face", {
   schema: {
     enabled: { type: "boolean", default: true },
+    landmark: { type: "string", default: "ORIGIN" },
   },
   update(oldData) {
     if (this.data.enabled !== oldData.enabled) {
@@ -16,7 +17,11 @@ export default AFRAME.registerComponent("zappar-face", {
     const { camera } = system;
     const scene = document.querySelector("a-scene").object3D;
 
-    this.trackerGroup = new ZapparThree.FaceAnchorGroup(camera, new ZapparThree.FaceTrackerLoader().load());
+    this.trackerGroup = new ZapparThree.FaceAnchorGroup(
+      camera,
+      new ZapparThree.FaceTrackerLoader().load(),
+      ZapparThree.FaceLandmarkName[this.data.landmark]
+    );
     scene.add(this.trackerGroup);
 
     this.trackerGroup.faceTracker.onVisible.bind((anchor) => el.emit("zappar-visible", anchor));
